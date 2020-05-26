@@ -27,23 +27,24 @@
 </script>
 
 <style>
-  span {
+  div span {
     user-select: none;
   }
 
-  span:hover {
+  div span:hover {
     cursor: pointer;
   }
 
-  .complete {
+  .complete > span {
     color: rgb(28, 172, 28);
+    text-decoration: line-through;
   }
 </style>
 
 <li
   class="list-group-item d-flex justify-content-between align-items-center"
   class:complete>
-  {label}
+  <span>{label}</span>
   <div>
     <span on:click={toggleComplete}>✅</span>
     <span on:click={deleteItem}>🗑️</span>

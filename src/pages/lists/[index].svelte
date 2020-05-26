@@ -29,7 +29,10 @@
     });
 
   async function append(e) {
-    e.preventDefault();
+    if (input == "") {
+      return;
+    }
+
     db.collection("lists")
       .doc(index)
       .collection("list")
