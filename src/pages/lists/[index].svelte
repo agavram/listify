@@ -1,8 +1,9 @@
 <script>
+  import { flip } from "svelte/animate";
   import { collectionData } from "rxfire/firestore";
   import { db } from "../../firebase";
   import ListItem from "../../_components/ListItem.svelte";
-  import SortableList from "svelte-sortable-list";
+  import { dndzone } from "../../_components/dnd-swap/action.js";
 
   export let index;
 
@@ -11,6 +12,9 @@
     .doc(index)
     .collection("list")
     .orderBy("generated");
+
+  const flipDurationMs = 300;
+
   let list;
   let input = "";
 
@@ -47,34 +51,12 @@
       });
   }
 
-  function sortList(e) {
-    let swap = [];
-    for (let i = 0; i < list.length; i++) {
-      if (e.detail[i].id != list[i].id) {
-        swap.push(i);
-      }
-    }
-    if (swap.length == 2) {
-      swapItems(swap[0], swap[1]);
-    }
-  }
+  async function swapItems(e) {
+    const { newIndex, oldIndex } = e.detail;
 
-  async function swapItems(newIndex, oldIndex) {
-    let newGenerate = await db
-      .collection("lists")
-      .doc(index)
-      .collection("list")
-      .doc(list[newIndex].id)
-      .get();
-    newGenerate = newGenerate.data().generated;
-
-    let oldGenerate = await db
-      .collection("lists")
-      .doc(index)
-      .collection("list")
-      .doc(list[oldIndex].id)
-      .get();
-    oldGenerate = oldGenerate.data().generated;
+    // const temp = list[oldIndex].generated;
+    // list[oldIndex].generated = list[newIndex].generated;
+    // list[newIndex].generated = temp;
 
     let batch = db.batch();
     batch.update(
@@ -84,7 +66,7 @@
         .collection("list")
         .doc(list[newIndex].id),
       {
-        generated: oldGenerate
+        generated: list[oldIndex].generated
       }
     );
 
@@ -95,7 +77,7 @@
         .collection("list")
         .doc(list[oldIndex].id),
       {
-        generated: newGenerate
+        generated: list[newIndex].generated
       }
     );
 
@@ -110,11 +92,13 @@
 {:else}
   <div class="d-flex justify-content-around mt-3">
     <div class="col-6">
-      <ul class="list-group">
-        <SortableList {list} key="id" on:sort={sortList} let:item>
-          <ListItem {...item} {index} />
-        </SortableList>
-      </ul>
+      <section use:dndzone={{ list, flipDurationMs }} on:finalize={swapItems}>
+        {#each list as item (item.id)}
+          <div animate:flip={{ duration: flipDurationMs }}>
+            <ListItem {...item} {index} />
+          </div>
+        {/each}
+      </section>
     </div>
   </div>
   <div class="d-flex justify-content-around mt-3">
@@ -126,6 +110,7 @@
           aria-label="Default"
           aria-describedby="inputGroup-sizing-default"
           bind:value={input}
+          on:keyup={(e) => e.keyCode == 13 && append()}
           placeholder="Enter something" />
         <button type="button" class="btn btn-primary ml-3" on:click={append}>
           Add
