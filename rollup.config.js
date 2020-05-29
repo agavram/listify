@@ -36,6 +36,7 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
         targets: [
           { src: staticDir + '/**/!(__index.html)', dest: distDir },
           { src: `${staticDir}/__index.html`, dest: distDir, rename: '__app.html', transform },
+          { src: 'node_modules/bootstrap/dist/**/*', dest: distDir + '/build/' }
         ],
 	copyOnce: true,
 	flatten: false
