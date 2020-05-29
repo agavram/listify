@@ -73,7 +73,7 @@ function unWatchDraggedElement() {
 
 /* custom drag-events handlers */
 function handleDraggedEntered(e) {
-    if (!shadowElIdx) {
+    if (shadowElIdx == undefined) {
         let { items } = dzToConfig.get(e.currentTarget);
         const { index, isProximityBased } = e.detail.indexObj;
         shadowElIdx = (isProximityBased && index === e.currentTarget.children.length - 1) ? index + 1 : index;
@@ -83,6 +83,7 @@ function handleDraggedEntered(e) {
     }
 }
 function handleDraggedLeft(e) {
+    console.log('left');
     if (lastHighlightEl) {
         lastHighlightEl.el.classList.remove("highlight")
         lastHighlightEl = undefined
@@ -90,7 +91,6 @@ function handleDraggedLeft(e) {
 }
 function handleDraggedIsOverIndex(e) {
     console.debug('dragged is over index', e.currentTarget, e.detail);
-
     const { index, lastIndex } = e.detail.indexObj;
     const { items } = dzToConfig.get(e.currentTarget);
     if (shadowElIdx != index) {

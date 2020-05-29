@@ -40,25 +40,39 @@
     text-decoration: line-through;
   }
 
+  @keyframes strike {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
   svg {
     pointer-events: none;
   }
 
-  .label {
-    width: 100%;
-  }
-
-  .label span {
+  .control {
     float: right;
   }
 
   li {
     padding-left: 10px;
+    border: none;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    transition: 300ms box-shadow;
+    margin-bottom: 0.5em;
+    border-radius: 0.25em;
+  }
+
+  .label {
+    transition: 300ms color;
   }
 </style>
 
-<li
-  class="list-group-item d-flex justify-content-between align-items-center highlight">
+<li class="list-group-item d-flex justify-content-between align-items-center">
   <div class="handle">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -74,9 +88,9 @@
         2-2-.9-2-2-2z" />
     </svg>
   </div>
-  <div class="label" class:complete>
-    {label}
-    <span on:click={deleteItem}>🗑️</span>
-    <span on:click={toggleComplete}>✅</span>
+  <div class="container">
+    <span class="label" class:complete>{label}</span>
+    <span class="control" on:click={deleteItem}>🗑️</span>
+    <span class="control" on:click={toggleComplete}>✅</span>
   </div>
 </li>

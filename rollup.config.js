@@ -5,6 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import copy from 'rollup-plugin-copy'
 import del from 'del'
+import postcss from 'rollup-plugin-postcss'
 
 
 
@@ -30,6 +31,7 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
       ...output
     },
     plugins: [
+      postcss(),
       copy({
         targets: [
           { src: staticDir + '/**/!(__index.html)', dest: distDir },
