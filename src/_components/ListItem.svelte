@@ -1,6 +1,5 @@
 <script>
   import { db } from "../firebase";
-
   export let label;
   export let complete;
   export let generated;
@@ -24,7 +23,6 @@
       .doc(id)
       .delete();
   }
-
 </script>
 
 <style>
@@ -46,7 +44,7 @@
     }
   }
 
-  svg {
+  .disable {
     pointer-events: none;
   }
 
@@ -67,6 +65,16 @@
   .label {
     transition: 300ms color;
   }
+
+  svg {
+    position: relative;
+    top: -2px;
+  }
+
+  svg:not(.disable) {
+    fill: #ef626c;
+    cursor: pointer;
+  }
 </style>
 
 <li class="list-group-item">
@@ -74,6 +82,7 @@
     <div class="p-2 flex-grow-1 bd-highlight">
       <div class="handle">
         <svg
+          class="disable"
           xmlns="http://www.w3.org/2000/svg"
           height="24"
           viewBox="0 0 24 24"
@@ -90,18 +99,22 @@
       <span class="label" class:complete>{label}</span>
     </div>
     <div class="p-2 bd-highlight">
-      <input type="checkbox" class="form-check-input" checked={complete} on:change={toggleComplete}/>
+      <input
+        type="checkbox"
+        class="form-check-input"
+        checked={complete}
+        on:change={toggleComplete} />
       <svg
+        on:click={deleteItem}
         xmlns="http://www.w3.org/2000/svg"
-        height="24"
         viewBox="0 0 24 24"
-        width="24">
+        width="24px"
+        height="24px">
         <path d="M0 0h24v24H0z" fill="none" />
         <path
           d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1
           1H5v2h14V4z" />
       </svg>
-      <span class="control" on:click={deleteItem}>🗑️</span>
     </div>
   </div>
 </li>
