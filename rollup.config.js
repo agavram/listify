@@ -27,7 +27,7 @@ function createConfig({ output, inlineDynamicImports, plugins = [] }) {
     input: `src/main.js`,
     output: {
       name: 'app',
-      sourcemap: true,
+      sourcemap: false,
       ...output
     },
     plugins: [
